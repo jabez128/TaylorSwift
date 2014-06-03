@@ -8,4 +8,6 @@ I'm a TaylorSwift fan and This repo is used to learn Swift.
 
 I'm learning ios programming now!
 
+##[第一个例子Hello World](./hellotaylor.swift)
 
+最初级的Hello World例子，so easy！
