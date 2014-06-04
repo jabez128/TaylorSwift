@@ -10,7 +10,7 @@ I'm learning ios programming now!
 
 ##Swift资源汇总  
 
-- ####[Swift编程语言中文版](http://numbbbbb.github.io/the-swift-programming-language-in-chinese/) 
+- [Swift编程语言中文版](http://numbbbbb.github.io/the-swift-programming-language-in-chinese/) 
 
 
 ##[第一个例子Hello World](./hellotaylor.swift)
@@ -26,7 +26,7 @@ I'm learning ios programming now!
 
 如果你之前使用过C或者Objective-C写过代码，那么上面的语法对你而言应该很熟悉 -- 在Swift中，这行代码是一个完整的程序。你不需要引入一个单独的库来进行一些输入/输出或者字符串处理的功能。全局作用域中的代码被用作程序的切入点，因此你不需要一个`main`函数。你也不需要在每行语句的后面添加分号。  
 
-这篇指南将会向你展示足够的信息来开始使用Swift编写程序，其中会向你展示如何完成不同的编程任务。如果你没有理解其中的某些部分也不要担心 -- 在这篇指南中提到的所有细节在本书（指的是The Swift Programming Language，在itunes上免费下载，网页版地址https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/GuidedTour.html#//apple_ref/doc/uid/TP40014097-CH2-XID_1）的后面部分由详细说明。  
+这篇指南将会向你展示足够的信息来开始使用Swift编写程序，其中会向你展示如何完成不同的编程任务。如果你没有理解其中的某些部分也不要担心 -- 在这篇指南中提到的所有细节在本书（指的是The Swift Programming Language，在itunes上免费下载，[网页版地址](https://developer.apple.com/library/prerelease/ios/documentation/Swift/Conceptual/Swift_Programming_Language/GuidedTour.html#//apple_ref/doc/uid/TP40014097-CH2-XID_1) ）的后面部分由详细说明。  
 
 #简单值
 
