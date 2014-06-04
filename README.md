@@ -448,6 +448,130 @@ Switch支持任何类型的数据以及各种各样的表达式 -- 它们不限�
     let hearts = Suit.Hearts
     let heartsDescription = hearts.simpleDescription()
 
-注意上面例子中枚举的`Heart`
+注意上面例子中枚举的`Heart`成员：当一个值被赋予`hearts`常量时，枚举成员`Suit.Hearts`被全名引用，因为常量并没有显式指明一个特定类型。在switch内部，该枚举被通过简写形式`.Heart`来引用，因为`self`是一个已经定义的套件。你可以使用任何已经定义值的类型的简写形式。  
 
-> to be continue...
+使用`struct`创建一个结构体。结构体支持和类相同的行为，包括方法和初始函数。结构体和类最大的不同之处在于在代码中进行传递时，结构体总是会被复制一遍，因为类传递的总是引用。  
+
+    struct Card {
+        var rank: Rank
+        var suit: Suit
+        func simpleDescription() -> String {
+            return "The \(rank.simpleDescription()) of \(suit.simpleDescription())"
+        }
+    }
+    let threeOfSpades = Card(rank: .Three, suit: .Spades)
+    let threeOfSpadesDescription = threeOfSpades.simpleDescription()
+
+一个枚举成员的实例可以和该实例有值之间的关联。同一个枚举成员的实例可以与它们有着不同的值的关联。当你在创建这个实例的时候需要提供关联值。关联值和原始值是不同的：一个枚举成员的原始值和它的所有实例相同，当你在定义枚举的时候需要提供原始值。  
+
+例如，考虑从一个服务器请求日出和日落时间的情形。服务器可能会回复有用信息，也有可能回复一些错误信息。  
+
+    enum ServerResponse {
+        case Result(String, String)
+        case Error(String)
+    }
+ 
+    let success = ServerResponse.Result("6:00 am", "8:09 pm")
+    let failure = ServerResponse.Error("Out of cheese.")
+ 
+    switch success {
+    case let .Result(sunrise, sunset):
+        let serverResponse = "Sunrise is at \(sunrise) and sunset is at \(sunset)."
+    case let .Error(error):
+        let serverResponse = "Failure...  \(error)"
+    }
+
+注意日出和日落时间是如何从`ServerResponse`中被提取出来的，它们都是switch case的匹配部分。  
+
+#协议和扩展   
+
+使用`protocal`来声明一个协议。  
+
+    protocol ExampleProtocol {
+        var simpleDescription: String { get }
+        mutating func adjust()
+    }
+
+类，枚举，以及结构体能够适应所有协议。  
+
+    class SimpleClass: ExampleProtocol {
+        var simpleDescription: String = "A very simple class."
+        var anotherProperty: Int = 69105
+        func adjust() {
+            simpleDescription += "  Now 100% adjusted."
+        }
+    }
+    var a = SimpleClass()
+    a.adjust()
+    let aDescription = a.simpleDescription
+ 
+    struct SimpleStructure: ExampleProtocol {
+        var simpleDescription: String = "A simple structure"
+        mutating func adjust() {
+            simpleDescription += " (adjusted)"
+        }
+    }
+    var b = SimpleStructure()
+    b.adjust()
+    let bDescription = b.simpleDescription
+
+注意在声明`SimpleStructure`的时候使用了`mutating`关键字来标记一个修改结构体的方法。声明`SimpleClass`不需要将它的任何方法标记为`mutating`因为一个类上的方法总是能修改类本身。   
+
+使用`extension`为已经存在的类型添加功能，例如一个新方法或者计算属性。你可以使用一个扩展为一个在别处声明的类型添加协议一致性，或者甚至为一个从别的库或者框架引入的类型添加协议一致性。  
+
+    extension Int: ExampleProtocol {
+        var simpleDescription: String {
+        return "The number \(self)"
+        }
+        mutating func adjust() {
+            self += 42
+        }   
+    }
+    7.simpleDescription
+
+你可以像使用别的命名类型一样使用一个协议名 -- 例如，创建一个对象集合，这个对相机和包含不同的类型但是对同一个协议具有一致性。当你使用类型是一个协议类型的值的时候，协议之外定义的方法是不可用的。 
+
+    let protocolValue: ExampleProtocol = a
+    protocolValue.simpleDescription
+    // protocolValue.anotherProperty  // Uncomment to see the error
+
+即使变量`protocolValue`拥有一个运行时的类型`SimpleClass`，编译器也会将它看做一个给定的类型`ExampleProtocol`。这意味着除了协议的一致性之外，你不能够随意访问类的方法和属性。  
+
+#泛型   
+
+将名字写在一对尖括号中来声明一个泛型函数或者类型：  
+
+    func repeat<ItemType>(item: ItemType, times: Int) -> ItemType[] {
+        var result = ItemType[]()
+        for i in 0..times {
+            result += item
+        }
+        return result
+    }
+    repeat("knock", 4)
+
+你可以声明泛型类型的函数和方法，以及类、枚举和结构体。  
+
+    // 重新实现Swift标准库中的 optional 类型
+    enum OptionalValue<T> {
+        case None
+        case Some(T)
+    }
+    var possibleInteger: OptionalValue<Int> = .None
+    possibleInteger = .Some(100)
+
+在类型的名称后面使用`where`来指定一个必要条件列表 -- 例如，去require某种类型实现一个协议，去require两种类型作为同样的类型，或者去require一个类拥有一个特定的超类。  
+
+    func anyCommonElements <T, U where T: Sequence, U: Sequence, T.GeneratorType.Element: Equatable, T.GeneratorType.Element == U.GeneratorType.Element> (lhs: T, rhs: U) -> Bool {
+        for lhsItem in lhs {
+            for rhsItem in rhs {
+                if lhsItem == rhsItem {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    anyCommonElements([1, 2, 3], [3])
+
+在这个简单的例子中，你可以忽略掉`where`并且简单的在一个冒号之后编写协议或者类名。编写`<T: Equatable>`和编写`<T where T: Equatable>`是一样的。
